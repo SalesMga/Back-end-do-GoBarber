@@ -1,9 +1,8 @@
-const {Router} = require('express'); //importa somente o Router, ao inves do express inteiro
+import {Router} from 'express';
+import UserController from './app/controllers/UserController';
 
 const routes = new Router(); //instancia uma nova rota
 
-routes.get('/', (req, res)=>{
-  return res.json({message: 'Ola Lucas Sales'});
-});
+routes.post('/users', UserController.store);
 
 export default routes;

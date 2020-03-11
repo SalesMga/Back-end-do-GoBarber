@@ -10,8 +10,9 @@ class User extends Model {
       provider: Sequelize.BOOLEAN,
     },
       {
-        sequelize
-      });
+        sequelize,
+      }
+    );
   }
 }
 
