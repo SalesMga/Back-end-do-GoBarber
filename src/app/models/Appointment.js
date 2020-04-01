@@ -4,9 +4,10 @@ import Sequelize, { Model } from 'sequelize';
 class Appointment extends Model {
 
   static init(sequelize) {
-    super.init({
+    super.init(
+      {
       date: Sequelize.DATE,
-      caceled_tat: Sequelize.DATE,
+      canceled_at: Sequelize.DATE,
     },
       {
         sequelize,
@@ -14,7 +15,7 @@ class Appointment extends Model {
     );
     return this;
   }
-  static associate(models){
+  static associate(model){
     this.belongsTo(model.User, {foreignKey: 'user_id', as: 'user'});
     this.belongsTo(model.User, {foreignKey: 'provider_id', as: 'provider'});
   }
