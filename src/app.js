@@ -1,22 +1,24 @@
 import express from 'express';
-import routes  from './routes';
+import routes from './routes';
+import path from 'path';
 
 import './database';
 
 class App {
-  constructor(){
+  constructor() {
     this.server = express();
 
     this.meddlewares();
     this.routes();
   }
 
-  meddlewares(){
-this.server.use(express.json());
+  meddlewares() {
+    this.server.use(express.json());
+    this.server.use('/files', express.static(path.resolve(__dirname, '..', 'tmp', 'uploads')));
   }
 
-  routes(){
-this.server.use(routes);
+  routes() {
+    this.server.use(routes);
   }
 }
 export default new App().server;
