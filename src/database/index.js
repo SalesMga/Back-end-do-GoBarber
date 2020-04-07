@@ -1,6 +1,5 @@
 // esse arquivo fará conexao banco de dados e carregar os models.
 import Sequelize from 'sequelize';
-
 import User from '../app/models/User';
 import File from '../app/models/File';
 import mongoose from 'mongoose';
@@ -13,6 +12,7 @@ const models = [User, File, Appointment];
 class DataBase {
   constructor() {
     this.init();
+    this.mongo();
   }
 
   init() {
@@ -26,7 +26,11 @@ class DataBase {
   mongo() {
     this.mongoConnection = mongoose.connect(
       'mongodb://localhost:27017/gobarber',
-      { useNewUrlParser: true, useFindAndModify: true, useUnifiedTopology: true, }
+      {
+        useNewUrlParser: true,
+        useFindAndModify: true,
+        useUnifiedTopology: true,
+      }
     );
   }
 }
