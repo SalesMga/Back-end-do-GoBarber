@@ -1,13 +1,16 @@
 import Appointment from '../models/Appointment';
-import { startOfHour, parseISO, isBefore } from 'date-fns'
+import { startOfHour, endOfHour, parseISO, isBefore, format } from 'date-fns';
+import pt from 'date-fns/locale/pt';
 import User from '../models/User';
 import File from '../models/File';
 import * as Yup from 'yup';
+import Notification from '../schemas/Notification';
 
 class AppointmentController {
 
   async index(req, res) {
-    const {page = 1} = req.query;
+    const { page = 1 } = req.query;
+
     const appointments = await Appointment.findAll({
       where: { user_id: req.userId, canceled_at: null },
       order: ['date'],
@@ -34,6 +37,7 @@ class AppointmentController {
   }
 
   async store(req, res) {
+
     const schema = Yup.object().shape({
       provider_id: Yup.number().required(),
       date: Yup.date().required(),
@@ -75,7 +79,7 @@ class AppointmentController {
       },
     });
     /**
-     * Se foi true, é porque ja existe agendamento nesta hora que quero marcar
+     * Se true,entao ja existe agendamento nesta nesta mesma hora
      */
     if (checkAvailability) {
       return res.status(400)
@@ -86,6 +90,22 @@ class AppointmentController {
       user_id: req.userId,
       provider_id,
       date: hourStart, //recebe hourStart para garantir que as horas nao terao numeros quebrados, com minutos e segundos.
+    });
+
+    /**
+   * Notify appointment provider
+   */
+    const user = await User.findByPk(req.userId);
+    const formattedDate = format(
+      hourStart,
+      "'dia' dd 'de' MMMM', às' H:mm'h'",
+      {
+        locale: pt,
+      }
+    );
+    await Notification.create({
+      content: `Novo agendamento de ${user.name} para o ${formattedDate}`,
+      user: provider_id,
     });
 
     return res.json(appointment);
