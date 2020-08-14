@@ -17,7 +17,7 @@ class User extends Model {
         sequelize,
       }
     );
-    this.addHook('beforeSave', async (user) => {
+    this.addHook('beforeSave', async user => {
       if (user.password) {
         user.password_hash = await bcrypt.hash(user.password, 8);
       }
@@ -28,7 +28,7 @@ class User extends Model {
 
   static associate(models) {
 
-    this.belongsTo(models.File, { foreignKey: 'avatar-id', as: 'avatar'});
+    this.belongsTo(models.File, { foreignKey: 'avatar_id', as: 'avatar'});
   }
 
   checkPassword(password) {
